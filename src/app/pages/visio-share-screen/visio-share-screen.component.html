@@ -1,0 +1,52 @@
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-9">
+      <h4><small>RECENT POSTS</small></h4>
+      <ng-template [ngIf]="hasActive">
+        <div class="row">
+          <div *ngFor="let item of all_participant" class="col-6">
+            <app-preview-participants [size]="heightPreview" [room]="currentRoom" [participant]="item">
+            </app-preview-participants>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+    <div class="col-sm-3 sidenav">
+      <div id="participantPreview">
+        <div *ngIf="!hasCredentials" class="credentials">
+          <div class="form-group">
+            <label for="identity">Name</label>
+            <input [(ngModel)]="credentials.indentity" type="text" id="identity" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label for="room">Room</label>
+            <input [(ngModel)]="credentials.room" type="text" id="room" class="form-control" />
+          </div>
+          <div>
+            <button class="btn btn-danger" (click)="saveCredentials()">Go</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="hasCredentials" class="control-container">
+        <button (click)="actOnVideo()" class="videoControl">{{ videoStatus }} video</button>
+        <button (click)="actOnAudio()" class="videoControl">{{audioStatus}}</button>
+      </div>
+      <div *ngIf="hasCredentials" class="chatContainer" id="chatContainer">
+
+      </div>
+      <div *ngIf="hasCredentials" class="inputMessage">
+        <div class="form-group">
+          <label for="inputMessage">Send Message</label>
+          <input [(ngModel)]="messageTosent" type="text" id="inputMessage" class="form-control">
+        </div>
+        <div>
+          <button (click)="sendMessage()" [ngClass]="{disabled: messageTosent ==''}"
+            class="btn btn-danger">Send</button>
+          <button (click)="startSharing()" class="btn btn-warning">{{sharingText}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,8 @@
-import { Injectable } from "@angular/core";
-import { createLocalTracks } from "twilio-video";
+import { Injectable } from '@angular/core';
+import { createLocalTracks, LocalVideoTrack } from 'twilio-video';
+const mediaDevices = navigator.mediaDevices as any;
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class SelectMediaService {
   localTracks = {
@@ -76,5 +77,34 @@ export class SelectMediaService {
       localStorage.setItem(`${kind}DeviceId`, deviceId);
       resolve(deviceId);
     });
+  }
+
+  /**
+   * Create a LocalVideoTrack for your screen. You can then share it
+   * with other Participants in the Room.
+   * @param {number} height - Desired vertical resolution in pixels
+   * @param {number} width - Desired horizontal resolution in pixels
+   * @returns {Promise<LocalVideoTrack>}
+   */
+  createScreenTrack(height, width) {
+    if (
+      typeof navigator === 'undefined' ||
+      !mediaDevices ||
+      !mediaDevices.getDisplayMedia
+    ) {
+      return Promise.reject(new Error('getDisplayMedia is not supported'));
+    }
+    return mediaDevices
+      .getDisplayMedia({
+        video: {
+          height: height,
+          width: width,
+        },
+      })
+      .then((stream) => {
+        return new LocalVideoTrack(stream.getVideoTracks()[0], {
+          name: 'presentation',
+        });
+      });
   }
 }

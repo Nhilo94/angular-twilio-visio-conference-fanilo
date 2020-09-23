@@ -60,6 +60,11 @@ export class VisioContainerComponent implements OnInit {
   deviceIds: { audio: any; video: any };
   private _ref = [];
 
+  currentRoom: any;
+  activeParticipant: any;
+  hasActive = false;
+  heightPreview = 'big';
+
   constructor(
     private httpVideo: VideoDataService,
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -149,6 +154,10 @@ export class VisioContainerComponent implements OnInit {
     // Handle the LocalParticipant's media.
     this.participantConnected(room.localParticipant, room);
 
+    this.currentRoom = room;
+    this.activeParticipant = room.localParticipant;
+    this.hasActive = true;
+
     // Subscribe to the media published by RemoteParticipants already in the Room.
     room.participants.forEach((participant) => {
       this.participantConnected(participant, room);
@@ -178,7 +187,13 @@ export class VisioContainerComponent implements OnInit {
     componentRef.instance.participant = participant;
 
     /** ADD LISTENER TO COMPONENT OUTPUT */
-    // componentRef.instance.outputQSection.subscribe((data) => {});
+    componentRef.instance.select_active.subscribe((data) => {
+      this.hasActive = false;
+      this.activeParticipant = data;
+      setTimeout(() => {
+        this.hasActive = true;
+      }, 200);
+    });
     // componentRef.instance.edit_status.subscribe(data => {
     //   this.in_edit.emit(data.in_edit);
     // });

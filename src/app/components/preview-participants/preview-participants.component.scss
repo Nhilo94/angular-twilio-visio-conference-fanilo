@@ -1,6 +1,10 @@
-.participant{
-  video{
+.participant {
+  text-align: center;
+  margin-top: 10px;
+  width: 100%;
+  video {
     width: 100%;
-    margin-top: 10px;
+    margin-top: 10px auto;
+    height: 100%;
   }
 }

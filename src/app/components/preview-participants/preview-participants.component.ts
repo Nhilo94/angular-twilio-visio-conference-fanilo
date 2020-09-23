@@ -6,6 +6,8 @@ import {
   ViewChild,
   AfterViewInit,
   ElementRef,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 
 @Component({
@@ -29,8 +31,17 @@ export class PreviewParticipantsComponent
     this.participant_in = arg;
   }
 
+  @Input('size') set size(arg) {
+    if (arg && arg === 'big') {
+      this.heightElement = 'auto';
+    }
+  }
+
+  @Output() select_active = new EventEmitter<any>();
+
   @ViewChild('myPreview', { read: ElementRef, static: false })
   myContainerRef: ElementRef;
+  heightElement = '200px';
 
   constructor() {}
 
@@ -51,12 +62,16 @@ export class PreviewParticipantsComponent
     }
     // Handle the TrackPublications already published by the Participant.
     this.participant_in.tracks.forEach((publication) => {
-      this.trackPublished(publication, this.participant_in);
+      if (publication.trackName !== 'chat') {
+        this.trackPublished(publication, this.participant_in);
+      }
     });
 
     // Handle theTrackPublications that will be published by the Participant later.
     this.participant_in.on('trackPublished', (publication) => {
-      this.trackPublished(publication, this.participant_in);
+      if (publication.trackName !== 'chat') {
+        this.trackPublished(publication, this.participant_in);
+      }
     });
   }
 
@@ -125,5 +140,9 @@ export class PreviewParticipantsComponent
     //   track.detach($activeVideo.get(0));
     //   $activeVideo.css('opacity', '0');
     // }
+  }
+
+  selectActiveParticipant() {
+    this.select_active.emit(this.participant_in);
   }
 }

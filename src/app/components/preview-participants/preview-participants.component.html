@@ -1,5 +1,4 @@
-<div #myPreview class="participant">
-  <audio autoplay  style="opacity: 0"></audio>
+<div [ngStyle]="{'height': heightElement}" (click)="selectActiveParticipant()" #myPreview class="participant">
+  <audio autoplay style="opacity: 0"></audio>
   <video autoplay muted playsinline style="opacity: 0"></video>
-  ssdfsfsfs
 </div>
